@@ -69,6 +69,7 @@ public class MainActivity extends Activity implements
             mMediaPlayer.setDataSource("rtsp://112.74.104.26/live.sdp");
             mMediaPlayer.setDisplay(holder);
             mMediaPlayer.prepareAsync();
+            mMediaPlayer.setBufferSize(2 * 1024 * 1024);
             mMediaPlayer.setAdaptiveStream(true);
             mMediaPlayer.setScreenOnWhilePlaying(true);
             mMediaPlayer.setOnBufferingUpdateListener(this);
@@ -87,6 +88,12 @@ public class MainActivity extends Activity implements
     public void onBufferingUpdate(MediaPlayer arg0, int percent) {
         Log.d(TAG, "onBufferingUpdate percent:" + percent);
         //mDialog.setMessage("视频缓冲" + percent + "%");
+        if(mMediaPlayer.isPlaying()) {
+            mDialog.hide();
+        } else {
+            mDialog.setMessage("视频缓冲中...." + percent + "%");
+            mDialog.show();
+        }
     }
 
     public void onCompletion(MediaPlayer arg0) {
@@ -126,13 +133,14 @@ public class MainActivity extends Activity implements
 //                    mediaPlayer.stop();
 //                    //needResume = true;
 //                }
-                mDialog.setMessage("视频缓冲中。。。");
+//                mDialog.show();
+//                mDialog.setMessage("视频缓冲中。。。");
                 break;
             case MediaPlayer.MEDIA_INFO_BUFFERING_END:
                 //The buffering is done, resume playing
                 //if (needResume)
                 //startVideoPlayback();
-                mDialog.hide();
+//                mDialog.hide();
                 break;
             case MediaPlayer.MEDIA_INFO_DOWNLOAD_RATE_CHANGED:
                 //Display video download speed
