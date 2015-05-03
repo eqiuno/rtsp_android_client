@@ -88,11 +88,15 @@ public class MainActivity extends Activity implements
     public void onBufferingUpdate(MediaPlayer arg0, int percent) {
         Log.d(TAG, "onBufferingUpdate percent:" + percent);
         //mDialog.setMessage("视频缓冲" + percent + "%");
-        if(mMediaPlayer.isPlaying()) {
+        if(mMediaPlayer.isPlaying() && mDialog != null) {
             mDialog.hide();
         } else {
-            mDialog.setMessage("视频缓冲中...." + percent + "%");
-            mDialog.show();
+            if(mDialog == null) {
+                mDialog = ProgressDialog.show(this, "", "视频缓冲中...." + percent + "%");
+            } else {
+                mDialog.setMessage("视频缓冲中...." + percent + "%");
+                mDialog.show();
+            }
         }
     }
 
